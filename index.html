@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Baby Shower</title>
+
+<style>
+body{
+  margin:0;
+  font-family:'Segoe UI', sans-serif;
+  background:url('fondo.jpg') no-repeat center/cover;
+  color:white;
+}
+
+/* CAPA OSCURA */
+.overlay{
+  background:rgba(0,0,0,0.45);
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  flex-direction:column;
+  text-align:center;
+}
+
+/* ANIMACIONES */
+.fade{
+  animation:fadeIn 1.5s ease;
+}
+@keyframes fadeIn{
+  from{opacity:0; transform:translateY(20px);}
+  to{opacity:1;}
+}
+
+/* TARJETA */
+.card{
+  background:rgba(255,255,255,0.95);
+  color:#333;
+  padding:25px;
+  border-radius:20px;
+  max-width:350px;
+}
+
+/* BOTONES */
+button{
+  width:100%;
+  padding:14px;
+  margin:8px 0;
+  border:none;
+  border-radius:25px;
+  background:linear-gradient(45deg,#ff8fb1,#ff5f8f);
+  color:white;
+  font-size:15px;
+  cursor:pointer;
+}
+
+/* TITULOS */
+h1,h2{
+  margin:10px 0;
+}
+</style>
+</head>
+
+<body>
+
+<div class="overlay">
+
+<!-- MUSICA -->
+<audio id="music" loop>
+  <source src="musica.mp3" type="audio/mpeg">
+</audio>
+
+<!-- INTRO -->
+<div id="intro" class="fade">
+  <h2>💖 Bienvenido 💖</h2>
+  <p>Gracias por ser parte de este momento tan especial</p>
+  <button onclick="start()">Abrir Invitación</button>
+</div>
+
+<!-- INVITACIÓN -->
+<div id="main" style="display:none;" class="fade">
+  <div class="card">
+
+    <h1>Chloé & Cameron</h1>
+    <p>✨ Dos corazones, el doble de amor ✨</p>
+
+    <p>
+    📅 25 de Abril<br>
+    🕓 4:00 PM<br>
+    📍 1621 Bridge Rd SE
+    </p>
+
+    <button onclick="map()">📍 Ver ubicación</button>
+    <button onclick="confirm()">✅ Confirmar asistencia</button>
+    <button onclick="raffle()">🎁 Sorteo de regalo</button>
+
+  </div>
+</div>
+
+</div>
+
+<script>
+
+// 🎁 LISTA LIMPIA (sin duplicados)
+const gifts = [
+"https://www.amazon.com/dp/B07BJGW9P3",
+"https://www.amazon.com/dp/B0GBZVYM3N",
+"https://www.amazon.com/dp/B09Y69HJKJ",
+"https://www.amazon.com/dp/B01NA7ZMIA",
+"https://www.amazon.com/dp/B013DUHCSG",
+"https://www.amazon.com/dp/B0CQNWVHZV",
+"https://www.amazon.com/dp/B0DMWW9K7Q",
+"https://www.amazon.com/dp/B07WWW8TGT",
+"https://www.amazon.com/dp/B089QWNQXC",
+"https://www.amazon.com/dp/B0FQM3W5HW",
+"https://www.amazon.com/dp/B0GJZWD3BS",
+"https://www.amazon.com/dp/B0BQQ4NR1L",
+"https://www.amazon.com/dp/B0G64PYBKL",
+"https://www.amazon.com/dp/B0D7J5B1F5",
+"https://www.amazon.com/dp/B0FGJ49MYP",
+"https://www.amazon.com/dp/B07MYW28QR",
+"https://www.amazon.com/dp/B09HJ6SV8K",
+"https://www.amazon.com/dp/B0FNCW5MSH"
+];
+
+// LOCAL STORAGE
+let used = JSON.parse(localStorage.getItem("usedGifts")) || [];
+
+// INICIO
+function start(){
+  document.getElementById("intro").style.display="none";
+  document.getElementById("main").style.display="block";
+
+  // reproducir música (requiere interacción del usuario)
+  document.getElementById("music").play().catch(()=>{});
+}
+
+// UBICACIÓN
+function map(){
+  window.open("https://maps.google.com/?q=1621+Bridge+Rd+SE");
+}
+
+// WHATSAPP
+function confirm(){
+  window.open("https://wa.me/17272837263?text=Confirmo%20mi%20asistencia%20al%20Baby%20Shower");
+}
+
+// 🎁 SORTEO
+function raffle(){
+
+  if(used.length >= gifts.length){
+    alert("🎁 Todos los regalos ya fueron asignados en este dispositivo");
+    return;
+  }
+
+  let available = gifts.filter(g => !used.includes(g));
+  let selected = available[Math.floor(Math.random()*available.length)];
+
+  used.push(selected);
+  localStorage.setItem("usedGifts", JSON.stringify(used));
+
+  alert("🎉 ¡Te tocó un regalo!");
+  window.open(selected);
+}
+
+// ⚠️ DETECCIÓN BÁSICA
+document.addEventListener("keydown", function(e){
+  if(e.key === "PrintScreen"){
+    alert("⚠️ Por favor no captures pantalla");
+  }
+});
+
+</script>
+
+</body>
+</html>
